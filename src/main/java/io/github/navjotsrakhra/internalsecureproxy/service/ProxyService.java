@@ -39,7 +39,7 @@ public class ProxyService {
             get.addHeader("Cookie", cookie);
             var response = httpClient.execute(get);
 
-            if (response.getStatusLine().getStatusCode() == 302) {
+            if (response.getStatusLine().getStatusCode() != 200) {
                 refreshCookie();
                 return getPrometheusFromEnvVarWithUsernameAndPassword();
             }
@@ -51,11 +51,8 @@ public class ProxyService {
     }
 
     private void fetchUsernamePassword() {
-//        FIXME
-//        username = System.getenv("username");
-//        password = System.getenv("password");
-        username = "test";
-        password = "test";
+        username = System.getenv("username");
+        password = System.getenv("password");
     }
 
     private void refreshCookie() {

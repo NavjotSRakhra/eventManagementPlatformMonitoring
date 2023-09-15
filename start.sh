@@ -1,5 +1,7 @@
 #!/bin/bash
 
-java -jar app.jar &
+java -jar ../../app.jar &
 
-prometheus --config.file=prometheus.yml
+prometheus --config.file=prometheus.yml &
+
+./grafana server

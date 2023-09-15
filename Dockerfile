@@ -17,6 +17,7 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 RUN apt update
+RUN apt upgrade -y
 RUN mkdir "/etc/prometheus"
 RUN mkdir "/var/lib/prometheus"
 RUN apt-get install -y wget
@@ -38,12 +39,22 @@ COPY prometheus.service .
 
 RUN mv prometheus.service /etc/systemd/system/
 
-ENV PORT=9090
-EXPOSE 9090
-
 WORKDIR /app
+RUN wget https://dl.grafana.com/enterprise/release/grafana-enterprise-10.1.1.linux-amd64.tar.gz
+RUN tar vxf grafana*.tar.gz
+WORKDIR /app/grafana-10.1.1
+
+COPY datasource.yaml sample.yaml
+RUN rm ./conf/provisioning/datasources/sample.yaml
+RUN mv sample.yaml ./conf/provisioning/datasources
+
+ENV PORT=3000
+EXPOSE 3000
+
+WORKDIR /app/grafana-10.1.1/bin
 COPY prometheus.yml .
 COPY start.sh .
 RUN chmod +x start.sh
+RUN chmod +x grafana
 
 ENTRYPOINT ["./start.sh"]

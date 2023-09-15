@@ -14,8 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class keepAlive {
     @Scheduled(timeUnit = TimeUnit.MINUTES, fixedDelay = 10)
     public void sendRequest() {
-//        var url = System.getenv("url_to_keep_alive"); FIXME
-        var url = "http://google.in";
+        var url = System.getenv("url_to_keep_alive");
 
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(RequestConfig.DEFAULT).build()) {
             HttpGet get = new HttpGet(url);
