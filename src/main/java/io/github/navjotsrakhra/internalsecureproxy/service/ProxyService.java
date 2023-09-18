@@ -39,12 +39,14 @@ public class ProxyService {
             get.addHeader("Cookie", cookie);
             var response = httpClient.execute(get);
 
-            if (response.getStatusLine().getStatusCode() != 200) {
+            String responseString = new String(response.getEntity().getContent().readAllBytes());
+
+            if (response.getStatusLine().getStatusCode() != 200 || responseString.contains("<!DOCTYPE html>")) {
                 refreshCookie();
                 return getPrometheusFromEnvVarWithUsernameAndPassword();
             }
 
-            return new String(response.getEntity().getContent().readAllBytes());
+            return responseString;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
